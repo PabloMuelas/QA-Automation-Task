@@ -7,26 +7,25 @@ test.describe('JavaScript Alerts', () => {
 
   // Antes de cada test, inicializo la pagina y navego a ella
   // Esto asegura que cada test empieza en el mismo estado y no depende de otros tests
-  // Lo cual mejora la independencia y fiabilidad de los tests
   test.beforeEach(async ({ page }) => {
 
     jsAlertsPage = new JsAlertsPage(page);
-    await jsAlertsPage.visitPage();
+    await jsAlertsPage.visitAndAssertPage();
   });
 
   // Idealmente los strings que comparamos podrian estar en un archivo a parte para facilitar cambios futuros y mantenibilidad
-  // pero igual que en el archivo de la pagina, para este ejercicio los dejo aqui directamente por simplicidad
-  test('The result text is correct after dismissing the JS alert', async ({ page }) => {
+  // pero igual que en el archivo de "jsalerts.ts", para este ejercicio los dejo aqui directamente por simplicidad
+  test('The result text is correct after dismissing the JS alert popup', async ({ page }) => {
 
     page.on('dialog', async dialog => {
       await dialog.accept();
     });
 
     await jsAlertsPage.clickAlertButton();
-    await jsAlertsPage.asertResultText('You successfully clicked an alert');
+    await jsAlertsPage.assertResultText('You successfully clicked an alert');
   });
 
-  test('The result text is correct after cancelling the JS confirm', async ({ page }) => {
+  test('The result text is correct after cancelling the JS confirm popup', async ({ page }) => {
 
     page.on('dialog', async dialog => {
       if (dialog.type() === 'confirm') {
@@ -35,10 +34,10 @@ test.describe('JavaScript Alerts', () => {
     });
     
     await jsAlertsPage.jsConfirmButton.click();
-    await jsAlertsPage.asertResultText('You clicked: Cancel');
+    await jsAlertsPage.assertResultText('You clicked: Cancel');
   });
 
-  test('The result text is correct after introducing text in the JS prompt', async ({ page }) => {
+  test('The result text is correct after introducing text in the JS prompt popup', async ({ page }) => {
 
     page.on('dialog', async dialog => {
       if (dialog.type() === 'prompt') {
@@ -47,7 +46,7 @@ test.describe('JavaScript Alerts', () => {
     });
     
     await jsAlertsPage.jsPromptButton.click();
-    await jsAlertsPage.asertResultText('You entered: {{string}}');
+    await jsAlertsPage.assertResultText('You entered: {{string}}');
   });
   
 });
